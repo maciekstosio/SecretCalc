@@ -1,6 +1,7 @@
 import { AppRegistry } from 'react-native';
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
+import { RkTheme } from 'react-native-ui-kitten';
 import Login from './screens/Login'
 import Home from './screens/Home'
 import Settings from './screens/Settings'
@@ -19,7 +20,10 @@ const RootStack = createStackNavigator(
                 backgroundColor: Colors.dark,
                 borderBottomWidth: 0
             },
-            headerTintColor: Colors.white,
+            headerTitleStyle: {
+                color: Colors.primary
+            },
+            headerTintColor: Colors.light,
         },
     }
 );

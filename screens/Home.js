@@ -6,8 +6,8 @@ import Styles from '../styles'
 export default class Home extends React.Component {
   static navigationOptions = {
     title: 'Home',
-    headerLeft: <NavigationButton title="Logout" />,
-    headerRight: <NavigationButton title="Settings" navigate="Settings" />
+    headerLeft: <NavigationButton title="Logout" leftIcon="lock" />,
+    headerRight: <NavigationButton navigate="Settings" rightIcon="settings" />
   };
 
   render() {
