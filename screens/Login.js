@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, Button, StatusBar, TouchableOpacity } from 'react-native';
-import NavigationButton from '../components/NavigationButton'
+import { View, Text, StatusBar, TouchableOpacity } from 'react-native';
+import * as Colors from '../colors';
+import Styles from '../styles'
 
 export default class Login extends React.Component {
   static navigationOptions = {
@@ -9,12 +10,12 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#fff' }}>
+      <View style={Styles.container}>
         <StatusBar
-          backgroundColor="blue"
+          backgroundColor={Colors.dark}
           barStyle="light-content"
         />
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}><Text>Login</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}><Text style={Styles.font}>Login</Text></TouchableOpacity>
       </View>
     );
   }
