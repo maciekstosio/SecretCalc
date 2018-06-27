@@ -12,6 +12,7 @@ import Icon from '../components/Icon';
 const SPACE_BETWEEN_IMAGES = 2
 const IMAGES_COUNT = 3
 const BUTTON_SIZE = 80
+const BUTTON_BOTTOM_MARGIN = 20
 
 export default class Gallery extends React.Component {
 	actionSheet = null
@@ -25,14 +26,21 @@ export default class Gallery extends React.Component {
 	state = {
 		isModalOpen: false,
 		galleryIndex: 0,
-		buttonVisibility: new Animated.Value(0)
+		buttonOpacity: new Animated.Value(0),
+		buttonPosition: new Animated.Value(0),
 	}
 
 	componentDidMount() {
-		Animated.timing(this.state.buttonVisibility, {
-			toValue: 1,
-			duration: 500,
-		}).start();                     
+		Animated.parallel([
+			Animated.timing(this.state.buttonOpacity, {
+				toValue: 1,
+				duration: 500,
+			}),
+			Animated.timing(this.state.buttonPosition, {
+				toValue: BUTTON_SIZE + BUTTON_BOTTOM_MARGIN,
+				duration: 500,
+			})
+		]).start();                   
 	}
 
 	handleImagePress = (galleryIndex) => {
@@ -43,18 +51,30 @@ export default class Gallery extends React.Component {
 	}
 
 	handleButtonPress = () => {
-		Animated.timing(this.state.buttonVisibility, {
-			toValue: 0,
-			duration: 500,
-		}).start();  
+		Animated.parallel([
+			Animated.timing(this.state.buttonOpacity, {
+				toValue: 0,
+				duration: 500,
+			}),
+			Animated.timing(this.state.buttonPosition, {
+				toValue: 0,
+				duration: 500,
+			})
+		]).start();
 		this.actionSheet.show()
 	}
 
 	handleActionSheet = (index) => {
-		Animated.timing(this.state.buttonVisibility, {
-			toValue: 1,
-			duration: 300,
-		}).start();  
+		Animated.parallel([
+			Animated.timing(this.state.buttonOpacity, {
+				toValue: 1,
+				duration: 500,
+			}),
+			Animated.timing(this.state.buttonPosition, {
+				toValue: BUTTON_SIZE + BUTTON_BOTTOM_MARGIN,
+				duration: 500,
+			})
+		]).start();
 	}
 
 	renderGalleryElement = ({item, index}) => {
@@ -170,7 +190,7 @@ export default class Gallery extends React.Component {
 			},
 		];
 
-		const { galleryIndex, isModalOpen, buttonVisibility } = this.state
+		const { galleryIndex, isModalOpen, buttonOpacity, buttonPosition } = this.state
 
 		return (
 			<View style={Styles.container}>
@@ -178,12 +198,12 @@ export default class Gallery extends React.Component {
 				<FlatList
 					data={images}
 					horizontal={false}
-					contentContainerStyle={{ paddingBottom: size }}
+					contentContainerStyle={{ paddingBottom: size/2 }}
 					numColumns={IMAGES_COUNT}
 					renderItem={this.renderGalleryElement}
 				/>
 
-      			<Animated.View style={{ opacity: buttonVisibility }}>
+      			<Animated.View style={{ opacity: buttonOpacity, bottom: buttonPosition }}>
 					<TouchableOpacity style={styles.button} activeOpacity={0.75} onPress={this.handleButtonPress} >
 						<Icon name="add" color={Colors.white} size={BUTTON_SIZE} />
 					</TouchableOpacity>
@@ -226,7 +246,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		position: 'absolute',
-		bottom: 20,
 		shadowColor: Colors.primary,
 		shadowOffset: { width: 0, height: 0 },
 		shadowOpacity: 0.8,
