@@ -25,6 +25,7 @@ target 'SecretCalc' do
   ]
 
   pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
   target 'SecretCalcTests' do
     inherit! :search_paths

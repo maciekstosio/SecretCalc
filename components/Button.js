@@ -1,12 +1,12 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, TouchableNativeFeedback, StyleSheet, Platform } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import * as Colors from '../colors';
 
 export default class Header extends React.Component {
     static defaultProps = {
         fontSize: 16,
-        color: Colors.white,
-        backgroundColor: Colors.primary
+        color: Colors.white
     }
 
     render() {
@@ -16,13 +16,20 @@ export default class Header extends React.Component {
         if (Platform.OS === 'android') {
             return (
                <TouchableNativeFeedback onPress={onPress}> 
-                    <View style={[styles.wrapper, { backgroundColor }]}><Text style={{fontSize}}>{content}</Text></View>
+                    <View style={[styles.wrapper, { backgroundColor: Colors.primary }]}><Text style={{fontSize}}>{content}</Text></View>
                </TouchableNativeFeedback>    
             )
          } else {
             return (
-               <TouchableOpacity style={[styles.wrapper, { backgroundColor }]} activeOpacity={0.5} onPress={onPress}> 
-                    <Text style={{fontSize}}>{content}</Text>
+               <TouchableOpacity activeOpacity={0.5} onPress={onPress}> 
+                    <LinearGradient
+                        start={{ x: 0.0, y: 1.0 }} end={{ x: 1.0, y: 1.0 }}
+                        locations={[0, 0.75, 1.0]}
+                        colors={[Colors.primaryLight, Colors.primary]}
+                        style={styles.wrapper}
+                    >
+                        <Text style={{fontSize}}>{content}</Text>
+                    </LinearGradient>
                </TouchableOpacity>    
             )
          }

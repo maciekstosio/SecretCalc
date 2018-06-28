@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Platform } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Input from '../components/Input';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import Styles from '../styles';
-import * as Colors from '../colors';
 
 export default class Settings extends React.Component {
     static navigationOptions = {
