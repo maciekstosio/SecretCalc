@@ -6,7 +6,7 @@ import Gallery from './screens/Gallery';
 import Settings from './screens/Settings';
 import * as Colors from './colors';
 
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated'])
+console.disableYellowBox = true;
 
 const RootStack = createStackNavigator(
     {
