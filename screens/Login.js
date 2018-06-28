@@ -4,10 +4,10 @@ import * as Colors from '../colors';
 import Styles from '../styles';
 
 const INIT_STATE = {
-	text: 0,
-	total: 0,
-	value: 0, 
-	operation: ""
+  text: 0,
+  total: 0,
+  value: 0,
+  operation: ""
 };
 
 const MAX_VALUE = 99999;
@@ -22,39 +22,39 @@ export default class Login extends React.Component {
 
 	state = { ...INIT_STATE };
 
-	static navigationOptions = {
-		header: null
-	};
+  static navigationOptions = {
+    header: null
+  };
 
-	pressNumber = (text) => {
-		const value = this.state.value;
-		const num = parseInt(text);
-		if (value === 0 && num === 0) return;
-		const newValue = Math.min(value * 10 + num, MAX_VALUE);
-		this.setState({ text: newValue , value: newValue });
-	};
+  pressNumber = (text) => {
+    const value = this.state.value;
+    const num = parseInt(text);
+    if (value === 0 && num === 0) return;
+    const newValue = Math.min(value * 10 + num, MAX_VALUE);
+    this.setState({ text: newValue, value: newValue });
+  };
 
-	calculateTotal = () => {
-		const { value, total, operation } = this.state;
+  calculateTotal = () => {
+    const { value, total, operation } = this.state;
 
-		switch(operation) {
-			case "+" :  return total + value;
-			case "-" : return total - value;
-			case "×" : return total * value;
-			case "" : return value;
-			case "=" : return (value === 0) ? total : value;
-		} 
-	};
+    switch (operation) {
+      case "+": return total + value;
+      case "-": return total - value;
+      case "×": return total * value;
+      case "": return value;
+      case "=": return (value === 0) ? total : value;
+    }
+  };
 
-	calculate = (operation) => {
-		const total = Math.min(this.calculateTotal(), MAX_VALUE);
-		this.setState({
-			total,
-			operation,
-			text: total,
-			value: 0
-		});
-	};
+  calculate = (operation) => {
+    const total = Math.min(this.calculateTotal(), MAX_VALUE);
+    this.setState({
+      total,
+      operation,
+      text: total,
+      value: 0
+    });
+  };
 
 	handleLongPress = () => {
 		AsyncStorage.getItem('password').then((password) => {
@@ -66,16 +66,16 @@ export default class Login extends React.Component {
 	}
 
   render() {
-	const size = (Dimensions.get('window').width - MARGIN*3)/4;
-	const dimentions = {width: size, height: size};
+    const size = (Dimensions.get('window').width - MARGIN * 3) / 4;
+    const dimentions = { width: size, height: size };
 
-	const CalculatorButton = (props) => <TouchableOpacity onPress={props.onPress} style={[styles.regularButton, dimentions, {backgroundColor: props.color}]}><Text style={styles.reguralButtonText}>{props.text}</Text></TouchableOpacity>
+    const CalculatorButton = (props) => <TouchableOpacity onPress={props.onPress} style={[styles.regularButton, dimentions, { backgroundColor: props.color }]}><Text style={styles.reguralButtonText}>{props.text}</Text></TouchableOpacity>
 
-	const GreyButton = (props) => <CalculatorButton onPress={() => this.pressNumber(props.text)} text={props.text} color={Colors.light}/>
-	const RedButton = (props) => <CalculatorButton onPress={() => this.calculate(props.text)} text={props.text} color={Colors.primary}/>
+    const GreyButton = (props) => <CalculatorButton onPress={() => this.pressNumber(props.text)} text={props.text} color={Colors.light} />
+    const RedButton = (props) => <CalculatorButton onPress={() => this.calculate(props.text)} text={props.text} color={Colors.primary} />
 
     return (
-      <View style={[Styles.container, {justifyContent: 'flex-end'}]}>
+      <View style={[Styles.container, { justifyContent: 'flex-end' }]}>
         <StatusBar
           backgroundColor={Colors.dark}
           barStyle="light-content"
@@ -116,25 +116,25 @@ export default class Login extends React.Component {
 
 const styles = StyleSheet.create({
   regularButton: {
-	justifyContent: 'center',
-	alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   reguralButtonText: {
-	color: Colors.white,
-	fontWeight: '200',
-	fontSize: 56
+    color: Colors.white,
+    fontWeight: '200',
+    fontSize: 56
   },
   row: {
-	flexDirection: 'row',
-	justifyContent: 'space-between',
-	marginBottom: MARGIN
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: MARGIN
   },
   text: {
-	fontSize: 116,
-	color: Colors.white,
-	fontWeight: '100',
-	textAlign: 'right',
-	marginBottom: 5,
-	marginRight: 15
+    fontSize: 116,
+    color: Colors.white,
+    fontWeight: '100',
+    textAlign: 'right',
+    marginBottom: 5,
+    marginRight: 15
   }
 });
