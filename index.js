@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppRegistry, YellowBox } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
-import Login from './screens/Login';
+import Login from './screens/login/Login';
 import Gallery from './screens/Gallery';
 import Settings from './screens/Settings';
 import * as Colors from './colors';
