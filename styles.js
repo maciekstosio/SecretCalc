@@ -3,7 +3,6 @@ import * as Colors from './colors';
 
 export default styles = StyleSheet.create({
     container: {
-        paddingTop: 10,
         flex: 1,
         flexDirection: 'column',
         backgroundColor: Colors.black

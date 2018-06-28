@@ -3,14 +3,14 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { RkTheme } from 'react-native-ui-kitten';
 import Login from './screens/Login'
-import Home from './screens/Home'
+import Gallery from './screens/Gallery'
 import Settings from './screens/Settings'
 import * as Colors from './colors'
 
 const RootStack = createStackNavigator(
     {
         Login,
-        Home,
+        Gallery,
         Settings,
     },
     {
