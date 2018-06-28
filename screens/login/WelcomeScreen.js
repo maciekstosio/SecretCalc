@@ -13,7 +13,7 @@ export default class WelcomeScreen extends React.Component {
     state = { ... INIT_STATE };
 
     setPassword = () => {
-        const {code, codeCheck} = this.state;
+        const { code, codeCheck } = this.state;
         if(code !== "" && code === codeCheck) {
             AsyncStorage.setItem('password', code); 
             this.setState(INIT_STATE);
@@ -38,7 +38,7 @@ export default class WelcomeScreen extends React.Component {
                     <PasswordInput onChangeText={(code)=> this.setState({code})} label='Insert Code'></PasswordInput>
                     <PasswordInput onChangeText={(codeCheck)=> this.setState({codeCheck})} label='Repeat Code'></PasswordInput>
                 </View>
-                <Button onPress={() => {if(this.setPassword()) this.props.onPress.call()}}>OK</Button>
+                <Button onPress={() => {if(this.setPassword()) this.props.onPress()}}>OK</Button>
             </View>
         </ScrollView>
     );

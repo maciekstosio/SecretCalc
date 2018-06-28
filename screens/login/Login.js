@@ -16,7 +16,7 @@ const MAX_VALUE = 99999;
 const MARGIN = 1;
 
 export default class Login extends React.Component {
-	state = { ...INIT_STATE, modalSetPassword: false};
+	state = { ...INIT_STATE, modalSetPassword: false };
 
 	componentDidMount() {
 		AsyncStorage.setItem('password', "");

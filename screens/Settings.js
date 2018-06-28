@@ -21,7 +21,7 @@ export default class Settings extends React.Component {
     }
 
     changePassword = () => {
-        const {oldCode, newCode, repeatNewCode } = this.state;
+        const { oldCode, newCode, repeatNewCode } = this.state;
         if(newCode === "") return;
         AsyncStorage.getItem('password').then((password) => {
             if(password === oldCode && newCode === repeatNewCode) {
@@ -33,16 +33,6 @@ export default class Settings extends React.Component {
     }
 
     render() {
-        // const PasswordInput = (props) =>  <Input
-        //                                     {...props}
-        //                                     keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'} 
-        //                                     secureTextEntry={true} 
-        //                                     keyboardAppearance="dark" 
-        //                                     placeholder={props.label} 
-        //                                     textAlign="right" 
-        //                                     fontSize={20} 
-        //                                     underlineColorAndroid="transparent" 
-        //                                 />
         return (
             <View style={Styles.container} >
                 <Header>Change code</Header>
@@ -51,7 +41,7 @@ export default class Settings extends React.Component {
                 <PasswordInput label="New code" value={this.state.newCode} onChangeText={(newCode) => this.setState({newCode})}  />
                 <PasswordInput label="Repeat new code" value={this.state.repeatNewCode} onChangeText={(repeatNewCode) => this.setState({repeatNewCode})}  />
 
-                <Button onPress={() => this.changePassword()}>Change password</Button>
+                <Button onPress={this.changePassword}>Change password</Button>
             </View>
         );
     }
