@@ -22,7 +22,7 @@ export default class Settings extends React.Component {
 
     changePassword = () => {
         const { oldCode, newCode, repeatNewCode } = this.state;
-        if(newCode === "") return;
+        if(!newCode) return;
         AsyncStorage.getItem('password').then((password) => {
             if(password === oldCode && newCode === repeatNewCode) {
                 AsyncStorage.setItem('password', newCode);  
