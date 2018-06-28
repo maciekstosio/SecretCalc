@@ -1,6 +1,6 @@
 import React from 'react';
 import { AsyncStorage, View, Platform, Alert } from 'react-native';
-import Input from '../components/Input';
+import PasswordInput from '../components/PasswordInput';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import Styles from '../styles';
@@ -33,16 +33,16 @@ export default class Settings extends React.Component {
     }
 
     render() {
-        const PasswordInput = (props) =>  <Input
-                                            {...props}
-                                            keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'} 
-                                            secureTextEntry={true} 
-                                            keyboardAppearance="dark" 
-                                            placeholder={props.label} 
-                                            textAlign="right" 
-                                            fontSize={20} 
-                                            underlineColorAndroid="transparent" 
-                                        />
+        // const PasswordInput = (props) =>  <Input
+        //                                     {...props}
+        //                                     keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'} 
+        //                                     secureTextEntry={true} 
+        //                                     keyboardAppearance="dark" 
+        //                                     placeholder={props.label} 
+        //                                     textAlign="right" 
+        //                                     fontSize={20} 
+        //                                     underlineColorAndroid="transparent" 
+        //                                 />
         return (
             <View style={Styles.container} >
                 <Header>Change code</Header>

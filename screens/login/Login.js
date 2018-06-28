@@ -1,7 +1,8 @@
 import React from 'react';
-import { AsyncStorage, View, Text, StatusBar, TouchableOpacity, TouchableWithoutFeedback, StyleSheet, Dimensions } from 'react-native';
-import * as Colors from '../colors';
-import Styles from '../styles';
+import { AsyncStorage, View, Text, StatusBar, TouchableOpacity, TouchableWithoutFeedback, StyleSheet, Dimensions, Modal, ScrollView } from 'react-native';
+import * as Colors from '../../colors';
+import Styles from '../../styles';
+import WelcomeScreen from './WelcomeScreen';
 
 const INIT_STATE = {
   text: 0,
@@ -15,18 +16,21 @@ const MAX_VALUE = 99999;
 const MARGIN = 1;
 
 export default class Login extends React.Component {
-	constructor(props) {
-		super(props);
-		AsyncStorage.getItem('password').then((password) => {if(password === null) AsyncStorage.setItem('password', '1234')});
-	};
+	state = { ...INIT_STATE, modalSetPassword: false};
 
-	state = { ...INIT_STATE };
+	componentDidMount() {
+		AsyncStorage.setItem('password', "");
+		AsyncStorage.getItem('password').then((password) => {
+			if(!password) this.setState({modalSetPassword: true});
+		});
+	}
 
   static navigationOptions = {
     header: null
   };
 
   pressNumber = (text) => {
+	  console.log(this.state.isPasswordSet);
     const value = this.state.value;
     const num = parseInt(text);
     if (value === 0 && num === 0) return;
@@ -63,7 +67,9 @@ export default class Login extends React.Component {
 				this.props.navigation.navigate('Gallery');
 			}
 		;})
-	}
+  }
+  
+  hideWelcomeScreen = () => this.setState({modalSetPassword: false});
 
   render() {
     const size = (Dimensions.get('window').width - MARGIN * 3) / 4;
@@ -80,6 +86,9 @@ export default class Login extends React.Component {
           backgroundColor={Colors.dark}
           barStyle="light-content"
         />
+		<Modal visible={this.state.modalSetPassword} animationType="slide">
+			<WelcomeScreen onPress={() => this.hideWelcomeScreen()}></WelcomeScreen>
+		</Modal>
         <TouchableWithoutFeedback onLongPress={this.handleLongPress}>
 			<View>
 				<Text style={styles.text}>{this.state.text}</Text>
@@ -115,26 +124,26 @@ export default class Login extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  regularButton: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  reguralButtonText: {
-    color: Colors.white,
-    fontWeight: '200',
-    fontSize: 56
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: MARGIN
-  },
-  text: {
-    fontSize: 116,
-    color: Colors.white,
-    fontWeight: '100',
-    textAlign: 'right',
-    marginBottom: 5,
-    marginRight: 15
-  }
+    regularButton: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    reguralButtonText: {
+        color: Colors.white,
+        fontWeight: '200',
+        fontSize: 56
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: MARGIN
+    },
+    text: {
+        fontSize: 116,
+        color: Colors.white,
+        fontWeight: '100',
+        textAlign: 'right',
+        marginBottom: 5,
+        marginRight: 15
+    }
 });
