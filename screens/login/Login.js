@@ -66,8 +66,8 @@ export default class Login extends React.Component {
 				this.setState(INIT_STATE);
 				this.props.navigation.navigate('Gallery');
 			}
-		;})
-  }
+		});
+    };
   
   hideWelcomeScreen = () => this.setState({modalSetPassword: false});
 
