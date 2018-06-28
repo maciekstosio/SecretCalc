@@ -40,6 +40,12 @@
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>SecretApp would like access to your photo gallery</string>
+	<key>NSCameraUsageDescription</key>
+	<string>SecretApp would like to use your camera</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>SecretApp would like to save photos to your photo gallery</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
