@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StatusBar, TouchableOpacity, TouchableWithoutFeedback, StyleSheet, Dimensions } from 'react-native';
+import { AsyncStorage, View, Text, StatusBar, TouchableOpacity, TouchableWithoutFeedback, StyleSheet, Dimensions } from 'react-native';
 import * as Colors from '../colors';
 import Styles from '../styles';
 
@@ -15,9 +15,12 @@ const MAX_VALUE = 99999;
 const MARGIN = 1;
 
 export default class Login extends React.Component {
-	state = {
-		...INIT_STATE
-	}
+	constructor(props) {
+		super(props);
+		AsyncStorage.getItem('password').then((password) => {if(password === null) AsyncStorage.setItem('password', '1234')});
+	};
+
+	state = { ...INIT_STATE };
 
 	static navigationOptions = {
 		header: null
@@ -54,7 +57,12 @@ export default class Login extends React.Component {
 	};
 
 	handleLongPress = () => {
-		this.props.navigation.navigate('Home');
+		AsyncStorage.getItem('password').then((password) => {
+			if(parseInt(password) === this.state.text) {
+				this.setState(INIT_STATE);
+				this.props.navigation.navigate('Home')
+			}
+		;})
 	}
 
   render() {
@@ -72,7 +80,11 @@ export default class Login extends React.Component {
           backgroundColor={Colors.dark}
           barStyle="light-content"
         />
-        <TouchableWithoutFeedback onLongPress={this.handleLongPress}><Text style={styles.text}>{this.state.text}</Text></TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onLongPress={this.handleLongPress}>
+			<View>
+				<Text style={styles.text}>{this.state.text}</Text>
+			</View>
+		</TouchableWithoutFeedback>
 		<View style={styles.row}>
 			<GreyButton text="7"/>
 			<GreyButton text="8"/>
