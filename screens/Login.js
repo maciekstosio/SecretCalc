@@ -60,7 +60,7 @@ export default class Login extends React.Component {
 		AsyncStorage.getItem('password').then((password) => {
 			if(parseInt(password) === this.state.text) {
 				this.setState(INIT_STATE);
-				this.props.navigation.navigate('Home')
+				this.props.navigation.navigate('Gallery');
 			}
 		;})
 	}
