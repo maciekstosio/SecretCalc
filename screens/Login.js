@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StatusBar, TouchableOpacity, TouchableWithoutFeedback, StyleSheet, Dimensions } from 'react-native';
+import { AsyncStorage, View, Text, StatusBar, TouchableOpacity, TouchableWithoutFeedback, StyleSheet, Dimensions } from 'react-native';
 import * as Colors from '../colors';
 import Styles from '../styles';
 
