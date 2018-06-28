@@ -1,6 +1,7 @@
 export const white = '#fff';
 export const light = '#C0BCBC';
-export const primary = '#EE4C2B';
+export const primaryLight = '#EE4C2B';
+export const primary = '#ED3009';
 export const dark = '#2A2A2A';
 export const black = '#161616';
 export const darkBlack = '#222';

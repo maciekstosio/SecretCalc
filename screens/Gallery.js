@@ -2,10 +2,11 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Modal, FlatList, Dimensions, Animated, StatusBar } from 'react-native';
 import Swiper from 'react-native-swiper';
 import NavigationButton from '../components/NavigationButton';
-import Image from 'react-native-fast-image';Image
+import Image from 'react-native-fast-image';
 import ImageZoom from 'react-native-image-pan-zoom';
 import ActionSheet from 'react-native-actionsheet'
 import ImagePicker from 'react-native-image-crop-picker';
+import LinearGradient from 'react-native-linear-gradient';
 import RNFS from 'react-native-fs';
 import Config from '../config';
 import Styles from '../styles';
@@ -187,7 +188,6 @@ export default class Gallery extends React.Component {
 
 		return (
 			<View style={Styles.container}>
-
 				<FlatList
 					data={images}
 					horizontal={false}
@@ -198,8 +198,15 @@ export default class Gallery extends React.Component {
 				/>
 
       			<Animated.View style={{ opacity: buttonOpacity, bottom: buttonPosition }}>
-					<TouchableOpacity style={styles.button} activeOpacity={0.75} onPress={this.handleButtonPress} >
-						<Icon name="add" color={Colors.white} size={BUTTON_SIZE} />
+					<TouchableOpacity  activeOpacity={0.75} onPress={this.handleButtonPress} >
+						<LinearGradient
+							start={{ x: 0.0, y: 1.0 }} end={{ x: 1.0, y: 1.0 }}
+							locations={[0, 0.75, 1.0]}
+							colors={[ '#ff2b00', '#ed3009' ]}
+							style={styles.button}
+						>
+							<Icon name="add" color={Colors.white} size={BUTTON_SIZE} />
+						</LinearGradient>
 					</TouchableOpacity>
 				</Animated.View>
 
