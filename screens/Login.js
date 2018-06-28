@@ -54,7 +54,7 @@ export default class Login extends React.Component {
   };
 
   handleLongPress = () => {
-    this.props.navigation.navigate('Home');
+    this.props.navigation.navigate('Gallery');
   }
 
   render() {
