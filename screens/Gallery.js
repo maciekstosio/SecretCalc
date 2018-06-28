@@ -1,12 +1,16 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Modal, FlatList, Dimensions, Animated } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Modal, FlatList, Dimensions, Animated, StatusBar } from 'react-native';
 import Swiper from 'react-native-swiper';
-import NavigationButton from '../components/NavigationButton'
-import Image from 'react-native-fast-image'
+import NavigationButton from '../components/NavigationButton';
+import Image from 'react-native-fast-image';
 import ImageZoom from 'react-native-image-pan-zoom';
 import ActionSheet from 'react-native-actionsheet'
-import Styles from '../styles'
-import * as Colors from '../colors'
+import ImagePicker from 'react-native-image-crop-picker';
+import LinearGradient from 'react-native-linear-gradient';
+import RNFS from 'react-native-fs';
+import Config from '../config';
+import Styles from '../styles';
+import * as Colors from '../colors';
 import Icon from '../components/Icon';
 
 const SPACE_BETWEEN_IMAGES = 2
@@ -28,9 +32,28 @@ export default class Gallery extends React.Component {
 		galleryIndex: 0,
 		buttonOpacity: new Animated.Value(0),
 		buttonPosition: new Animated.Value(0),
+		images: []
+	}
+
+	loadImages = () => {
+		RNFS.readdir(RNFS.DocumentDirectoryPath + Config.imageFolder).then(folder => {
+			const images = folder.map(image => {
+				const imageNameParts = image.split('-')
+
+				return {
+					uri: RNFS.DocumentDirectoryPath + Config.imageFolder + "/" + image,
+					width: parseInt(imageNameParts[1]),
+					height: parseInt(imageNameParts[2])
+				}
+			});
+
+			this.setState({ images })
+		})
 	}
 
 	componentDidMount() {
+		this.loadImages();
+
 		Animated.parallel([
 			Animated.timing(this.state.buttonOpacity, {
 				toValue: 1,
@@ -65,6 +88,40 @@ export default class Gallery extends React.Component {
 	}
 
 	handleActionSheet = (index) => {
+		const saveImage = (image) => {
+			const { width, height, path } = image
+			const filename = path.split("/").pop()
+			const name = `/${new Date().getTime()}-${width}-${height}-${filename}`;
+
+			RNFS.mkdir(RNFS.DocumentDirectoryPath + Config.imageFolder, { NSURLIsExcludedFromBackupKey: false });
+			RNFS.copyFile(path, RNFS.DocumentDirectoryPath + Config.imageFolder + name)
+				.then(() => {})
+				.catch(err => console.log("ERROR", err))
+		}  
+
+		if (index === 0) {
+			ImagePicker.openCamera({}).then(image => {
+				saveImage(image)
+				this.loadImages();
+			})
+			.catch(err => console.log("ERROR", err))
+		}
+
+		if (index === 1) {
+			StatusBar.setBarStyle('dark-content', true);
+			
+			ImagePicker.openPicker({
+				multiple: true,
+				maxFiles: 10
+			}).then(images => {
+				images.forEach(image => saveImage(image));
+				this.loadImages();
+			})
+			.catch(err => console.log("ERROR", err))
+			.finally(() => StatusBar.setBarStyle('light-content', true));
+		}
+		
+
 		Animated.parallel([
 			Animated.timing(this.state.buttonOpacity, {
 				toValue: 1,
@@ -81,10 +138,10 @@ export default class Gallery extends React.Component {
 		const size = (Dimensions.get('window').width - (IMAGES_COUNT - 1) * SPACE_BETWEEN_IMAGES) / IMAGES_COUNT
 
 		return (
-			<TouchableOpacity key={'button' + index} onPress={() => this.handleImagePress(index)}>
+			<TouchableOpacity key={'button' + item.uri} onPress={() => this.handleImagePress(index)}>
 				<Image
 					source={item}
-					key={'gallery' + index}
+					key={'gallery' + item.uri}
 					style={{
 						width: size,
 						height: size,
@@ -97,115 +154,59 @@ export default class Gallery extends React.Component {
 	}
 
 	renderGallery = (images) => {
-		return images.map((image, index) => <ImageZoom
-			cropWidth={Dimensions.get('window').width}
-			cropHeight={Dimensions.get('window').height}
-			imageWidth={Dimensions.get('window').width}
-			imageHeight={Dimensions.get('window').width}
-			enableSwipeDown={true}
-			onSwipeDown={() => this.setState({ isModalOpen: false })}
-		>
-			<Image
-				key={'zoom' + index}
-				source={{ uri: image.uri }}
-				style={{ flex: 1}} 
-			/>
-		</ImageZoom>)
+		return images.map((image, index) => {
+			const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
+			const { width, height } = image;
+
+			//Scale images to fit screen width
+			const scale = width/windowWidth;
+			const newWidth = windowWidth;
+			const newHeight = height/scale;
+			
+			return(
+				<ImageZoom
+					cropWidth={windowWidth}
+					cropHeight={windowHeight}
+					imageWidth={newWidth}
+					imageHeight={newHeight}
+					enableSwipeDown={true}
+					onSwipeDown={() => this.setState({ isModalOpen: false })}
+					key={'zoom' +  image.uri}
+				>
+					<Image
+						source={{ uri: image.uri }}
+						style={{ width: newWidth, height: newHeight }}
+					/>
+				</ImageZoom>
+			);
+		})
 	}
 
 	render() {
 		const size = (Dimensions.get('window').width - (IMAGES_COUNT - 1) * SPACE_BETWEEN_IMAGES) / IMAGES_COUNT
-		const images = [
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://s.yimg.com/ny/api/res/1.2/PL05ZmMeIAeFOQ.YwHJR2w--/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9ODAw/http://media.zenfs.com/en-US/homerun/rollingstone.com/2788ba6a426890cabe4996731fb825fb'
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://s.yimg.com/ny/api/res/1.2/PL05ZmMeIAeFOQ.YwHJR2w--/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9ODAw/http://media.zenfs.com/en-US/homerun/rollingstone.com/2788ba6a426890cabe4996731fb825fb'
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://s.yimg.com/ny/api/res/1.2/PL05ZmMeIAeFOQ.YwHJR2w--/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9ODAw/http://media.zenfs.com/en-US/homerun/rollingstone.com/2788ba6a426890cabe4996731fb825fb'
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://s.yimg.com/ny/api/res/1.2/PL05ZmMeIAeFOQ.YwHJR2w--/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9ODAw/http://media.zenfs.com/en-US/homerun/rollingstone.com/2788ba6a426890cabe4996731fb825fb'
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://s.yimg.com/ny/api/res/1.2/PL05ZmMeIAeFOQ.YwHJR2w--/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9ODAw/http://media.zenfs.com/en-US/homerun/rollingstone.com/2788ba6a426890cabe4996731fb825fb'
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://s.yimg.com/ny/api/res/1.2/PL05ZmMeIAeFOQ.YwHJR2w--/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9ODAw/http://media.zenfs.com/en-US/homerun/rollingstone.com/2788ba6a426890cabe4996731fb825fb'
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://s.yimg.com/ny/api/res/1.2/PL05ZmMeIAeFOQ.YwHJR2w--/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9ODAw/http://media.zenfs.com/en-US/homerun/rollingstone.com/2788ba6a426890cabe4996731fb825fb'
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-			{
-				uri: 'https://s.yimg.com/ny/api/res/1.2/PL05ZmMeIAeFOQ.YwHJR2w--/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9ODAw/http://media.zenfs.com/en-US/homerun/rollingstone.com/2788ba6a426890cabe4996731fb825fb'
-			},
-			{
-				uri: 'https://images-na.ssl-images-amazon.com/images/I/61IRouTCOWL.jpg',
-			},
-		];
-
-		const { galleryIndex, isModalOpen, buttonOpacity, buttonPosition } = this.state
+		const { galleryIndex, isModalOpen, buttonOpacity, buttonPosition, images } = this.state
 
 		return (
 			<View style={Styles.container}>
-
 				<FlatList
 					data={images}
 					horizontal={false}
 					contentContainerStyle={{ paddingBottom: size/2 }}
 					numColumns={IMAGES_COUNT}
 					renderItem={this.renderGalleryElement}
+					keyExtractor={(item, index) => 'listItem' + item.uri}
 				/>
 
       			<Animated.View style={{ opacity: buttonOpacity, bottom: buttonPosition }}>
-					<TouchableOpacity style={styles.button} activeOpacity={0.75} onPress={this.handleButtonPress} >
-						<Icon name="add" color={Colors.white} size={BUTTON_SIZE} />
+					<TouchableOpacity  activeOpacity={0.75} onPress={this.handleButtonPress} >
+						<LinearGradient
+							start={{ x: 0.0, y: 1.0 }} end={{ x: 1.0, y: 1.0 }}
+							locations={[0, 0.75, 1.0]}
+							colors={[ '#ff2b00', '#ed3009' ]}
+							style={styles.button}
+						>
+							<Icon name="add" color={Colors.white} size={BUTTON_SIZE} />
+						</LinearGradient>
 					</TouchableOpacity>
 				</Animated.View>
 

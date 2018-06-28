@@ -5,10 +5,10 @@ import Styles from '../../styles';
 import WelcomeScreen from './WelcomeScreen';
 
 const INIT_STATE = {
-  text: 0,
-  total: 0,
-  value: 0,
-  operation: ""
+    text: 0,
+    total: 0,
+    value: 0,
+    operation: ""
 };
 
 const MAX_VALUE = 99999;

@@ -1,11 +1,12 @@
-import { AppRegistry } from 'react-native';
 import React from 'react';
+import { AppRegistry, YellowBox } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
-import { RkTheme } from 'react-native-ui-kitten';
-import Login from './screens/login/Login'
-import Gallery from './screens/Gallery'
-import Settings from './screens/Settings'
-import * as Colors from './colors'
+import Login from './screens/login/Login';
+import Gallery from './screens/Gallery';
+import Settings from './screens/Settings';
+import * as Colors from './colors';
+
+console.disableYellowBox = true;
 
 const RootStack = createStackNavigator(
     {
@@ -34,6 +35,5 @@ class App extends React.Component {
     }
 }
 
-console.disableYellowBox = true;
 
 AppRegistry.registerComponent('SecretCalc', () => App);
