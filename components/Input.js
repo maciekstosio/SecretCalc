@@ -7,7 +7,7 @@ export default class Input extends React.Component {
 
     render() {
         return (
-            <TouchableWithoutFeedback onPress={this.input.focus}>
+            <TouchableWithoutFeedback onPress={() => this.input.focus()}>
                 <View style={styles.inputWrapper}>
                     <Text style={[styles.input, { fontSize: this.props.fontSize }]}>{this.props.label}</Text>
                     <TextInput ref={(r) => this.input = r} style={[styles.input]} placeholderTextColor={Colors.darkGray} {...this.props} />
